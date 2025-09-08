@@ -1,15 +1,13 @@
-# === FILE: pyproject.toml ===
 [tool.poetry]
 name = "treemark"
 version = "0.1.0"
 description = "TreeMark — fast, scalable folder -> markdown/JSON structure generator"
 authors = ["Mahesh <mahesh23906@gmail.com>"]
 
-#packages = [
-#  { include = "tree_mark" },
-#  { include = "data" }
-#]
-
+# explicitly include the package directory that contains your code
+packages = [
+  { include = "tree_mark" }
+]
 
 [tool.poetry.dependencies]
 python = ">=3.11"
@@ -21,7 +19,8 @@ aiofiles = "^23.1.0"
 fastapi = "^0.100.0"
 uvicorn = "^0.22.0"
 
-[tool.poetry.dev-dependencies]
+# dev dependencies using the new groups API
+[tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
 pytest-asyncio = "^0.20.0"
 black = "^24.0.0"
