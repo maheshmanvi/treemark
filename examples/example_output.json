@@ -1,0 +1,8 @@
+# === FILE: examples/example_output.md ===
+# Example output (markdown)
+
+- my_project/
+  - README.md
+  - src/
+    - __init__.py
+    - main.py
