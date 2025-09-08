@@ -64,6 +64,7 @@ htmlcov/
 # ============================
 # Generated outputs (TreeMark)
 outputs/
+data/outputs/
 treemark_out*.json
 treemark_out*.md
 

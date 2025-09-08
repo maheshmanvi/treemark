@@ -3,7 +3,12 @@
 name = "treemark"
 version = "0.1.0"
 description = "TreeMark — fast, scalable folder -> markdown/JSON structure generator"
-authors = ["Mahesh mahesh23906@gmail.com"]
+authors = ["Mahesh <mahesh23906@gmail.com>"]
+
+#packages = [
+#  { include = "tree_mark" },
+#  { include = "data" }
+#]
 
 
 [tool.poetry.dependencies]
@@ -13,11 +18,15 @@ rich = "^14.0.0"
 loguru = "^0.7.0"
 pydantic = "^2.1.0"
 aiofiles = "^23.1.0"
-fastapi = "^0.95.0"
+fastapi = "^0.100.0"
 uvicorn = "^0.22.0"
-pytest = "^7.0.0"
-pytest-asyncio = "^0.20.0"
 
+[tool.poetry.dev-dependencies]
+pytest = "^8.0.0"
+pytest-asyncio = "^0.20.0"
+black = "^24.0.0"
+isort = "^5.13.0"
+mypy = "^1.10.0"
 
 [tool.poetry.scripts]
 treemark = "tree_mark.main:main"
