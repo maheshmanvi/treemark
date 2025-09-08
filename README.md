@@ -29,7 +29,7 @@ and/or a Markdown representation. It also supports:
 
 ## Project structure (high level)
 
-
+```
 treemark/
 ├─ pyproject.toml
 ├─ README.md
