@@ -38,6 +38,8 @@ from tree_mark.adapters.serializers.markdown_serializer import (
 from tree_mark.adapters.repository.file_repository import write_text_file, write_json_file
 from tree_mark.scripts.create_from_json import recreate_from_json
 
+from tree_mark.cli.file_opener import list_output_files, open_file_in_browser
+
 app = typer.Typer(help="TreeMark CLI — generate folder structure as JSON/Markdown and recreate from JSON")
 
 
@@ -173,7 +175,8 @@ async def _interactive_main(default_outputs_dir: str = 'outputs'):
             "  2) Recreate filesystem from JSON or Markdown\n"
             "  3) Convert JSON -> Markdown\n"
             "  4) Convert Markdown -> JSON\n"
-            "  5) Exit\n"
+            "  5) Open Recent Processed Files\n"
+            "  6) Exit\n"
         )
         console.print(main_menu)
         try:
@@ -358,7 +361,54 @@ async def _interactive_main(default_outputs_dir: str = 'outputs'):
             except Exception as exc:
                 console.print(f"[red]Failed to convert Markdown to JSON: {exc}[/red]")
 
-        elif choice in ("5", "exit", "quit", "q"):
+        # 5 -> Open Recent Processed Files
+        elif choice in ("5", "open recent", "open recent processed files", "open recent files"):
+            try:
+                outputs_dir = ensure_outputs_dir(default_outputs_dir)
+                files = list_output_files(outputs_dir)
+                if not files:
+                    console.print("[yellow]No processed files found in outputs folder.[/yellow]\n")
+                    continue
+
+                console.print("\nRecent processed files:")
+                for idx, fp in enumerate(files, start=1):
+                    console.print(f"  {idx}) {fp.name}  ({fp.suffix.lower().lstrip('.')})")
+
+                # prompt for selection; supports 'back' and 'exit'
+                selection_raw = prompt_with_controls("Enter file number to open (or 'back' to return)", default="")
+                if selection_raw.strip() == "":
+                    console.print("[yellow]No selection made — returning to main menu.[/yellow]\n")
+                    continue
+
+                # accept comma-separated multiple numbers? (not requested) — keep it single selection
+                try:
+                    sel = int(selection_raw.strip())
+                except ValueError:
+                    console.print("[red]Invalid input. Please enter the number shown next to the file.[/red]\n")
+                    continue
+
+                if sel < 1 or sel > len(files):
+                    console.print("[red]Selected number out of range. Please try again.[/red]\n")
+                    continue
+
+                chosen = files[sel - 1]
+                console.print(f"[blue]Opening {chosen.name}...[/blue]")
+                ok, msg = open_file_in_browser(chosen)
+                if ok:
+                    console.print(f"[green]{msg}[/green]\n")
+                else:
+                    console.print(f"[red]{msg}[/red]\n")
+
+            except BackSignal:
+                # go back to main menu
+                continue
+            except Exception as exc:
+                logger.exception("Failed to list/open recent files: {}", exc)
+                console.print(f"[red]An error occurred while opening the file: {exc}[/red]\n")
+                continue
+
+
+        elif choice in ("6", "exit", "quit", "q"):
             console.print("[bold red]Exiting interactive mode. Goodbye![/bold red]")
             break
 
