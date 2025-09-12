@@ -71,3 +71,9 @@ treemark_out*.md
 # Temp files
 *.tmp
 *.bak
+
+
+# ============================
+# Personal or rough work files
+# ============================
+temp/
